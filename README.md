@@ -1,9 +1,7 @@
-Mapbox GL Directions
+CargoRocket Launchpad - using Mapbox GL Directions
 ---
 
-A full featured directions plugin for [Mapbox GL JS](https://github.com/mapbox/mapbox-gl-js) using the [Mapbox Directions API](https://www.mapbox.com/directions/). Quickly add UI to display driving, cycling, or walking directions on the map. The Mapbox Directions API is powered by the [OSRM](http://project-osrm.org/) routing engine and open data from the [OpenStreetMap](https://www.openstreetmap.org/) project.
-
-For directions functionality in native mobile and desktop applications, see [Mapbox Android Services](https://github.com/mapbox/mapbox-java/), [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift/), and [MapboxNavigation.swift](https://github.com/mapbox/MapboxNavigation.swift/).
+A cargo bike routing client using a custom graphhopper routing service.
 
 ### Usage
 
@@ -25,12 +23,4 @@ var map = new mapboxgl.Map({
 map.addControl(directions, 'top-left');
 ```
 
-Live example: https://www.mapbox.com/mapbox-gl-js/example/mapbox-gl-directions/
-
-### Deeper dive
-
-See [API.md](https://github.com/mapbox/mapbox-gl-directions/blob/master/API.md) for complete reference.
-
-### Contributing
-
-See [CONTRIBUTING.md](https://github.com/mapbox/mapbox-gl-directions/blob/master/CONTRIBUTING.md).
+Live example: https://launchpad.xatellite.io

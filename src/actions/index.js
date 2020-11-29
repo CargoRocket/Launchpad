@@ -52,10 +52,11 @@ function setHoverMarker(feature) {
 
 function fetchDirections() {
   return (dispatch, getState) => {
-    const { api, accessToken, routeIndex, profile, alternatives, congestion, destination, language, exclude } = getState();
+    const { api, accessToken, routeIndex, profile, alternatives, congestion, destination, language, exclude, origin, waypoints} = getState();
     // if there is no destination set, do not make request because it will fail
     if (!(destination && destination.geometry)) return;
 
+    
     const query = buildDirectionsQuery(getState);
 
     // Request params
@@ -69,29 +70,105 @@ function fetchDirections() {
     if (exclude) options.push('exclude=' + exclude);
     if (accessToken) options.push('access_token=' + accessToken);
     request.abort();
-    request.open('GET', `${api}${profile}/${query}.json?${options.join('&')}`, true);
 
-    request.onload = () => {
-      if (request.status >= 200 && request.status < 400) {
-        var data = JSON.parse(request.responseText);
-        if (data.error) {
-          dispatch(setDirections([]));
-          return dispatch(setError(data.error));
-        }
+    if (profile == 'mapbox/rocketcargo') {
+      console.log("gh");
+      console.log("test");
+      const gh = 'https://graphhopper.xatellite.io/route'; // point=48.736267%2C9.157104&point=48.812346%2C9.094191&instructions=false&points_encoded=false';
+      const ghOptions = [];
+      ghOptions.push("point="+origin.geometry.coordinates[1]+","+origin.geometry.coordinates[0])
+      ghOptions.push("point="+destination.geometry.coordinates[1]+","+destination.geometry.coordinates[0])
+      ghOptions.push("points_encoded=false");
 
+      request.open('GET', `${gh}?${ghOptions.join('&')}`, true);
+      request.onload = () => {
+        console.log("gh load");
+        console.log(JSON.parse(request.responseText));
+        const response = JSON.parse(request.responseText);
+
+        const ghSteps = []
+        response.paths[0].instructions.forEach((instruction, index) => {
+          ghSteps.push({
+            intersections: [
+              {
+                  "out": 0,
+                  "entry": [
+                      true
+                  ],
+                  "bearings": [
+                      66
+                  ],
+                  "location": response.paths[0].points[index],
+              }
+            ],
+            driving_side: "right",
+            "geometry": [response.paths[0].points[instruction.interval[0]], response.paths[0].points[instruction.interval[1]]],
+            "mode": "cycling",
+            "maneuver": {
+                "bearing_after": 66,
+                "bearing_before": 0,
+                "location": response.paths[0].points[index],
+                "type": index == 0  ? "depart" : index == response.paths[0].instructions.length - 1 ? 'arrive' : '',
+                "instruction": instruction.text,
+            },
+            "weight": 27.7,
+            "duration": instruction.time / 1000,
+            "name": "",
+            "distance": 62.9
+          });
+        })
+        
+
+        const mapBoxResponse = {
+          routes: [{
+            geometry: response.paths[0].points,
+            weight: response.paths[0].weight,
+            duration: response.paths[0].time / 1000,
+            distance: response.paths[0].distance,
+            legs: [{
+              summary: "",
+              weight: response.paths[0].weight,
+              duration: response.paths[0].time / 1000,
+              steps: ghSteps,
+              distance: response.paths[0].distance,
+            }],
+          }],
+        };
         dispatch(setError(null));
-        if (!data.routes[routeIndex]) dispatch(setRouteIndex(0));
-        dispatch(setDirections(data.routes));
+        dispatch(setRouteIndex(0));
+        dispatch(setDirections(mapBoxResponse.routes));
 
-        // Revise origin / destination points
-        dispatch(originPoint(data.waypoints[0].location));
-        dispatch(destinationPoint(data.waypoints[data.waypoints.length - 1].location));
-      } else {
-        dispatch(setDirections([]));
-        return dispatch(setError(JSON.parse(request.responseText).message));
-      }
-    };
+        // dispatch(originPoint(response.paths[0].points[0]));
+        // dispatch(destinationPoint(response.paths[0].points[response.paths[0].points.length -1]));
+      };
 
+    } else {
+      console.log("mapbox");
+      request.open('GET', `${api}${profile}/${query}.json?${options.join('&')}`, true);
+
+
+      request.onload = () => {
+        console.log("mapbox load");
+        if (request.status >= 200 && request.status < 400) {
+          var data = JSON.parse(request.responseText);
+          if (data.error) {
+            dispatch(setDirections([]));
+            return dispatch(setError(data.error));
+          }
+  
+          dispatch(setError(null));
+          if (!data.routes[routeIndex]) dispatch(setRouteIndex(0));
+          dispatch(setDirections(data.routes));
+  
+          // Revise origin / destination points
+          dispatch(originPoint(data.waypoints[0].location));
+          dispatch(destinationPoint(data.waypoints[data.waypoints.length - 1].location));
+        } else {
+          dispatch(setDirections([]));
+          return dispatch(setError(JSON.parse(request.responseText).message));
+        }
+      };
+    }
     request.onerror = () => {
       dispatch(setDirections([]));
       return dispatch(setError(JSON.parse(request.responseText).message));
@@ -109,6 +186,7 @@ function fetchDirections() {
 function buildDirectionsQuery(state) {
   const { origin, destination, waypoints } = state();
 
+  console.log(origin);
   let query = [];
   query.push((origin.geometry.coordinates).join(','));
   query.push(';');

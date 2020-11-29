@@ -46,7 +46,6 @@ export default class Instructions {
             });
           });
         }
-
         this.container.innerHTML = instructionsTemplate({
           routeIndex,
           routes: directions.length,

@@ -1,4 +1,5 @@
 <div class='mapbox-directions-component mapbox-directions-inputs'>
+  <img src="https://cologne.xatellite.io/logo-pfade.svg" style="height: 100px"/>
   <div class='mapbox-directions-component-keyline'>
     <div class='mapbox-directions-origin'>
       <label class='mapbox-form-label'>
@@ -28,7 +29,7 @@
       value='mapbox/driving-traffic'
       <% if (profile === 'mapbox/driving-traffic') { %>checked<% } %>
     />
-    <label for='mapbox-directions-profile-driving-traffic'>Traffic</label>
+    <!-- <label for='mapbox-directions-profile-driving-traffic'>Traffic</label>
     <input
       id='mapbox-directions-profile-driving'
       type='radio'
@@ -44,7 +45,7 @@
       value='mapbox/walking'
       <% if (profile === 'mapbox/walking') { %>checked<% } %>
     />
-    <label for='mapbox-directions-profile-walking'>Walking</label>
+    <label for='mapbox-directions-profile-walking'>Walking</label> -->
     <input
       id='mapbox-directions-profile-cycling'
       type='radio'
@@ -52,7 +53,15 @@
       value='mapbox/cycling'
       <% if (profile === 'mapbox/cycling') { %>checked<% } %>
     />
-    <label for='mapbox-directions-profile-cycling'>Cycling</label>
+    <label for='mapbox-directions-profile-cycling'>Normal Cycling</label>
+    <input
+    id='mapbox-directions-profile-rocketcargo'
+    type='radio'
+    name='profile'
+    value='mapbox/rocketcargo'
+    <% if (profile === 'mapbox/rocketcargo') { %>checked<% } %>
+  />
+  <label for='mapbox-directions-profile-rocketcargo'>CargoRocket - Cargobike Cycling</label>
   </div>
   <% } %>
 </div>

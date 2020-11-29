@@ -28,8 +28,14 @@
               icon= 'roundabout';
             }
 
-            var lng = step.maneuver.location[0];
-            var lat = step.maneuver.location[1];
+            if (icon == '') {
+              icon = 'straight';
+            }
+
+            // icon ='roundabout';
+
+            var lng = 0; // step.maneuver.location[0];
+            var lat = 0; // step.maneuver.location[1];
           %>
           <li
             data-lat='<%= lat %>'

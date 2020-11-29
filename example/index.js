@@ -2,7 +2,7 @@
 var mapboxgl = require('mapbox-gl');
 var insertCss = require('insert-css');
 var fs = require('fs');
-mapboxgl.accessToken = window.localStorage.getItem('MapboxAccessToken');
+mapboxgl.accessToken = "[MAPBOX_API_KEY]";
 
 // var directionsDiv = document.body.appendChild(document.createElement('div'));
 // directionsDiv.id = 'directions';
@@ -16,24 +16,24 @@ var map = window.map = new mapboxgl.Map({
   hash: true,
   container: mapDiv,
   style: 'mapbox://styles/mapbox/streets-v9',
-  center: [-79.4512, 43.6568],
+  center: [9.1814, 48.7774],
   zoom: 13
 });
 
-// remove control
-var button = document.body.appendChild(document.createElement('button'));
-button.style = 'z-index:10;position:absolute;top:10px;right:10px;';
-button.textContent = 'Remove directions control';
+// // remove control
+// var button = document.body.appendChild(document.createElement('button'));
+// button.style = 'z-index:10;position:absolute;top:10px;right:10px;';
+// button.textContent = 'Remove directions control';
 
-// remove all waypoints
-var removeWaypointsButton = document.body.appendChild(document.createElement('button'));
-removeWaypointsButton.style = 'z-index:10;position:absolute;top:30px;right:10px;';
-removeWaypointsButton.textContent = 'Remove all waypoints';
+// // remove all waypoints
+// var removeWaypointsButton = document.body.appendChild(document.createElement('button'));
+// removeWaypointsButton.style = 'z-index:10;position:absolute;top:30px;right:10px;';
+// removeWaypointsButton.textContent = 'Remove all waypoints';
 
 // directions
 var MapboxDirections = require('../src/index');
 var directions = new MapboxDirections({
-  accessToken: window.localStorage.getItem('MapboxAccessToken'),
+  accessToken: "[MAPBOX_API_KEY]",
   unit: 'metric',
   profile: 'mapbox/cycling'
 });
@@ -41,12 +41,12 @@ window.directions = directions;
 
 map.addControl(directions, 'top-left');
 
-map.on('load', () => {
-  button.addEventListener('click', function() {
-    map.removeControl(directions);
-  });
+// map.on('load', () => {
+//   button.addEventListener('click', function() {
+//     map.removeControl(directions);
+//   });
 
-  removeWaypointsButton.addEventListener('click', function() {
-    directions.removeRoutes();
-  });
-});
+//   removeWaypointsButton.addEventListener('click', function() {
+//     directions.removeRoutes();
+//   });
+// });

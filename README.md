@@ -1,7 +1,11 @@
-CargoRocket Launchpad - using Mapbox GL Directions
----
+<div align="center">
+  <img src="https://cologne.xatellite.io/logo-pfade.svg" alt="Logo" height="100px" />
 
-A cargo bike routing client using a custom graphhopper routing service.
+  CargoRocket Launchpad
+  ---
+</div>
+
+A cargo bike routing client using  Mapbox GL Directionsan and custom graphhopper routing service.
 
 ### Usage
 
